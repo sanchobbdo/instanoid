@@ -27,7 +27,14 @@ puts "min_tag_id: #{min_tag_id}"
 
 puts "Start polling ..."
 begin
+  print "Getting new pictures..."
   data = Instagram.tag_recent_media(tag, :min_tag_id => min_tag_id)
+  print " #{data.count} found.\n"
+
+  images = data.map { |entry| entry.images.standard_resolution.url }
+  images.each do |url|
+    puts "Printing #{url}."
+  end
 
   min_tag_id = data.pagination.min_tag_id
 

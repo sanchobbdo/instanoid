@@ -3,6 +3,8 @@ require 'bundler/setup'
 
 require 'yaml'
 require 'instagram'
+require 'open-uri'
+require 'cupsffi'
 
 puts "Instanoid is running."
 
@@ -13,6 +15,8 @@ print "Done.\n"
 print "\n"
 config.each_pair { |k, v| puts "#{k}: #{v}" }
 print "\n"
+
+printer = CupsPrinter.new(config['printer'])
 
 Instagram.configure do |c|
   c.client_id = config['client_id']
@@ -34,9 +38,11 @@ begin
   images = data.map { |entry| entry.images.standard_resolution.url }
   images.each do |url|
     puts "Printing #{url}."
+    File.open('temp.jpg', 'w') { |f| f.write(open(url).read) }
+    printer.print_file('temp.jpg')
   end
 
-  min_tag_id = data.pagination.min_tag_id
+  min_tag_id = data.pagination.min_tag_id if data.pagination.min_tag_id
 
   puts "Sleeping (20s)..."
   sleep(20)

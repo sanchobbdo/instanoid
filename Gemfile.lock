@@ -11,6 +11,7 @@ GEM
       faraday_middleware (~> 0.8)
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
+    json (1.7.7)
     multi_json (1.7.2)
     multipart-post (1.2.0)
 
@@ -19,3 +20,4 @@ PLATFORMS
 
 DEPENDENCIES
   instagram (~> 0.10.0)
+  json (~> 1.7.7)

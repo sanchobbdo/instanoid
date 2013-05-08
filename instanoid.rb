@@ -1,3 +1,5 @@
+$:.unshift(File.dirname(__FILE__)+'/lib')
+
 require 'rubygems'
 require 'bundler/setup'
 
@@ -5,6 +7,8 @@ require 'yaml'
 require 'instagram'
 require 'open-uri'
 require 'cupsffi'
+
+require 'renderer'
 
 puts "Instanoid is running."
 
@@ -26,23 +30,28 @@ end
 tag = config['tag']
 
 puts "Asking instagram about the last posted under ##{tag}"
-in_tag_id = Instagram.tag_recent_media(tag).pagination.min_tag_id
+min_tag_id = Instagram.tag_recent_media(tag).pagination.min_tag_id
 puts "min_tag_id: #{min_tag_id}"
 
 puts "Start polling ..."
+
 begin
   print "Getting new pictures..."
-  data = Instagram.tag_recent_media(tag, :min_tag_id => min_tag_id)
-  print " #{data.count} found.\n"
 
-  images = data.map { |entry| entry.images.standard_resolution.url }
-  images.each do |url|
-    puts "Printing #{url}."
-    File.open('temp.jpg', 'w') { |f| f.write(open(url).read) }
-    printer.print_file('temp.jpg')
+  entries = Instagram.tag_recent_media(tag, :min_tag_id => min_tag_id)
+  print " #{entries.count} found.\n"
+
+  entries.each_with_index do |entry, i|
+    puts "Rendering entry #{i}."
+
+    rendered = Renderer.render(entry, File.read(config['template']))
+    File.open('.temp.html', 'w') { |f| f.write(rendered) }
+
+    puts "printing entry #{i}."
+    printer.print_file('.temp.html')
   end
 
-  min_tag_id = data.pagination.min_tag_id if data.pagination.min_tag_id
+  min_tag_id = entries.pagination.min_tag_id if entries.pagination.min_tag_id
 
   puts "Sleeping (20s)..."
   sleep(20)

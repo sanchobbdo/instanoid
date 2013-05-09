@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)+'/lib')
 require 'rubygems'
 require 'bundler/setup'
 
+require 'fileutils'
 require 'hashie'
 require 'yaml'
 require 'instagram'
@@ -13,6 +14,11 @@ require 'instanoid'
 require 'prawn_renderer'
 
 puts "Instanoid is running."
+
+print "Cleaning temp folder..."
+FileUtils.rm_rf 'tmp'
+FileUtils.mkdir 'tmp'
+print "Done.\n"
 
 Instanoid.config do
   parameter :client_id

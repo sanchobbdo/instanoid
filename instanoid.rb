@@ -44,7 +44,7 @@ begin
   entries.each_with_index do |entry, i|
     print "Rendering entry #{i}..."
 
-    rendered = Renderer.render(entry, File.read(config['template']))
+    rendered = Renderer.render(entry, :template => File.read(config['template']))
     File.open('.temp.html', 'w') { |f| f.write(rendered) }
 
     print " Done.\n"

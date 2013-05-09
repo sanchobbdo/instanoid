@@ -4,8 +4,8 @@ class Renderer
   attr_accessor :template
 
   class << self
-    def render(vars, template)
-      new(vars, template).render
+    def render(vars, options = {})
+      new(vars, options).render
     end
   end
 
@@ -15,11 +15,14 @@ class Renderer
     end
   end
 
-  def initialize(vars, template)
-    vars.each_pair do |k, v| 
+  def initialize(vars, options = {})
+    vars.each_pair do |k, v|
       metaclass.send :attr_accessor, k
       send "#{k}=", v
     end
+
+    raise "Must specify a template." unless options.has_key?(:template)
+    template = options[:template]
 
     self.template = ERB.new(template)
   end

@@ -42,13 +42,16 @@ begin
   print " #{entries.count} found.\n"
 
   entries.each_with_index do |entry, i|
-    puts "Rendering entry #{i}."
+    print "Rendering entry #{i}..."
 
     rendered = Renderer.render(entry, File.read(config['template']))
     File.open('.temp.html', 'w') { |f| f.write(rendered) }
 
-    puts "printing entry #{i}."
+    print " Done.\n"
+
+    print "Printing entry #{i}..."
     printer.print_file('.temp.html')
+    print " Done.\n"
   end
 
   min_tag_id = entries.pagination.min_tag_id if entries.pagination.min_tag_id

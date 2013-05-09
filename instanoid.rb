@@ -10,7 +10,7 @@ require 'open-uri'
 require 'cupsffi'
 
 require 'instanoid'
-require 'renderer'
+require 'erb_renderer'
 
 puts "Instanoid is running."
 
@@ -53,7 +53,7 @@ begin
 
   entries.each_with_index do |entry, i|
     print "Rendering entry #{i}..."
-    filename = Renderer.render(entry, Instanoid.renderer)
+    filename = ErbRenderer.render(entry, Instanoid.renderer)
     print " Done.\n"
 
     print "Printing entry #{i}..."

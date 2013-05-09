@@ -1,6 +1,6 @@
 require 'erb'
 
-class Renderer
+class ErbRenderer
   attr_accessor :template, :output
 
   class << self

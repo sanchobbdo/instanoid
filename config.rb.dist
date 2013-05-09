@@ -5,6 +5,9 @@ Instanoid.config do
   printer       "printer name"
   renderer      Hash[
                   :output => "temp-file-name",
-                  :template => File.read("template.to.use")
+                  :template => lambda { |pdf, data|
+                    # prawn logic
+                    # access entry var through data
+                  }
                 ]
 end

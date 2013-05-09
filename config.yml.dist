@@ -2,4 +2,5 @@ client_id: instagram-api-client-id
 client_secret: instagram-api-client-secret
 tag: tag-to-search
 printer: printer-name
-template: template-to-use
+renderer:
+  template: template-to-use

@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)+'/lib')
 require 'rubygems'
 require 'bundler/setup'
 
+require 'hashie'
 require 'yaml'
 require 'instagram'
 require 'open-uri'
@@ -13,7 +14,7 @@ require 'renderer'
 puts "Instanoid is running."
 
 print "Reading config.yml..."
-config = YAML.load_file('config.yml')
+config = Hashie::Mash.new YAML.load_file('config.yml')
 print "Done.\n"
 
 print "\n"
@@ -44,7 +45,7 @@ begin
   entries.each_with_index do |entry, i|
     print "Rendering entry #{i}..."
 
-    rendered = Renderer.render(entry, :template => File.read(config['template']))
+    rendered = Renderer.render(entry, config['renderer'])
     File.open('.temp.html', 'w') { |f| f.write(rendered) }
 
     print " Done.\n"

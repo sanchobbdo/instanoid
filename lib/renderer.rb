@@ -1,7 +1,7 @@
 require 'erb'
 
 class Renderer
-  attr_accessor :template
+  attr_accessor :template, :output
 
   class << self
     def render(vars, options = {})
@@ -22,12 +22,19 @@ class Renderer
     end
 
     raise "Must specify a template." unless options.has_key?(:template)
+    raise "Must specify an output."  unless options.has_key?(:output)
+
     template = options[:template]
+    output   = "#{options[:output]}.html"
 
     self.template = ERB.new(template)
+    self.output   = output
   end
 
   def render
-    template.result(binding)
+    rendered = template.result(binding)
+    File.open(output, 'w') { |f| f.write(rendered) }
+
+    output
   end
 end

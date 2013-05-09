@@ -53,14 +53,11 @@ begin
 
   entries.each_with_index do |entry, i|
     print "Rendering entry #{i}..."
-
-    rendered = Renderer.render(entry, Instanoid.renderer)
-    File.open('.temp.html', 'w') { |f| f.write(rendered) }
-
+    filename = Renderer.render(entry, Instanoid.renderer)
     print " Done.\n"
 
     print "Printing entry #{i}..."
-    printer.print_file('.temp.html')
+    printer.print_file(filename)
     print " Done.\n"
   end
 

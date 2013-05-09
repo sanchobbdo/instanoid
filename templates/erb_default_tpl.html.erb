@@ -68,11 +68,11 @@ end
       <img class="image" src="<%= data.images.standard_resolution.url %>" />
     </div>
 
-    <% unless data.comments.data.empty? %>
+    <% unless data.caption.empty? %>
       <footer class="footer">
-        <p class="comment">
-          <span class="username"><%= data.comments.data.first.from.username %></span>
-          <%= span_tokens data.comments.data.first.text %>
+        <p class="caption">
+          <span class="username"><%= data.caption.from.username %></span>
+          <%= span_tokens data.caption.text %>
         </p>
       </footer>
     <% end %>

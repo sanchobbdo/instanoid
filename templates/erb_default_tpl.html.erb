@@ -1,3 +1,16 @@
+<%
+def span_tokens(text)
+  span_tags(span_mentions(text))
+end
+
+def span_tags(text)
+  text.gsub(/((?:^|\s)#[\w]*)/, '<span class="tag">\1</span>')
+end
+
+def span_mentions(text)
+  text.gsub(/((?:^|\s)@[\w]*)/, '<span class="mention">\1</span>')
+end
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,12 +19,59 @@
 
   <style>
     body {
+      font: 16px/1.2em Helvetica, Arial, sans-serif;
+      margin: 0;
+    }
 
+    .page {
+      padding: 1em;
+      width: 612px;
+    }
+
+    .header {
+      line-height: 50px;
+      margin-bottom: 1em;
+    }
+
+    .header .profile_picture {
+      margin-right: 1em;
+    }
+
+    .profile_picture {
+      height: 50px;
+      vertical-align: middle;
+    }
+
+    .username {
+      color: steelblue;
+      font-weight: bold;
+    }
+
+    .tag, .mention {
+      color: steelblue;
     }
   </style>
 </head>
 
 <body>
-  <h1><%= data.user.username %></h1>
+  <div class="page">
+    <header class="header">
+      <img class="profile_picture" src="<%= data.user.profile_picture %>" />
+      <strong class="username"><%= data.user.username %></strong>
+    </header>
+
+    <div class="content">
+      <img class="image" src="<%= data.images.standard_resolution.url %>" />
+    </div>
+
+    <% unless data.comments.data.empty? %>
+      <footer class="footer">
+        <p class="comment">
+          <span class="username"><%= data.comments.data.first.from.username %></span>
+          <%= span_tokens data.comments.data.first.text %>
+        </p>
+      </footer>
+    <% end %>
+  </div>
 </body>
 </html>

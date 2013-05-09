@@ -9,26 +9,35 @@ require 'instagram'
 require 'open-uri'
 require 'cupsffi'
 
+require 'instanoid'
 require 'renderer'
 
 puts "Instanoid is running."
 
-print "Reading config.yml..."
-config = Hashie::Mash.new YAML.load_file('config.yml')
-print "Done.\n"
-
-print "\n"
-config.each_pair { |k, v| puts "#{k}: #{v}" }
-print "\n"
-
-printer = CupsPrinter.new(config['printer'])
-
-Instagram.configure do |c|
-  c.client_id = config['client_id']
-  c.client_secret = config['client_secret']
+Instanoid.config do
+  parameter :client_id
+  parameter :client_secret
+  parameter :tag
+  parameter :printer
+  parameter :renderer
 end
 
-tag = config['tag']
+if File.exist?('config.rb')
+  print "Reading config.rb..."
+  require 'config' if File.exist?('config.rb')
+  print "Done.\n"
+else
+  puts 'No config file found' unless File.exist?('config.rb')
+end
+
+printer = CupsPrinter.new(Instanoid.printer)
+
+Instagram.configure do |c|
+  c.client_id = Instanoid.client_id
+  c.client_secret = Instanoid.client_secret
+end
+
+tag = Instanoid.tag
 
 puts "Asking instagram about the last posted under ##{tag}"
 min_tag_id = Instagram.tag_recent_media(tag).pagination.min_tag_id
@@ -45,7 +54,7 @@ begin
   entries.each_with_index do |entry, i|
     print "Rendering entry #{i}..."
 
-    rendered = Renderer.render(entry, config['renderer'])
+    rendered = Renderer.render(entry, Instanoid.renderer)
     File.open('.temp.html', 'w') { |f| f.write(rendered) }
 
     print " Done.\n"

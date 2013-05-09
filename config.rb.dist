@@ -1,0 +1,9 @@
+Instanoid.config do
+  client_id "instagram api client id"
+  client_secret "instagram api client secret"
+  tag "tag to search"
+  printer "printer name"
+  renderer Hash[
+    :template => "template.to.use"
+  ]
+end

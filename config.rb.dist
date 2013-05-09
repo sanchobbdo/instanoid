@@ -4,6 +4,6 @@ Instanoid.config do
   tag "tag to search"
   printer "printer name"
   renderer Hash[
-    :template => "template.to.use"
+    :template => File.read("template.to.use")
   ]
 end

@@ -1,25 +1,16 @@
 require 'erb'
 
 class ErbRenderer
-  attr_accessor :template, :output
+  attr_accessor :template, :output, :data
 
   class << self
-    def render(vars, options = {})
-      new(vars, options).render
+    def render(data, options = {})
+      new(data, options).render
     end
   end
 
-  def metaclass
-    class << self
-      self
-    end
-  end
-
-  def initialize(vars, options = {})
-    vars.each_pair do |k, v|
-      metaclass.send :attr_accessor, k
-      send "#{k}=", v
-    end
+  def initialize(data, options = {})
+    self.data = data
 
     raise "Must specify a template." unless options.has_key?(:template)
     raise "Must specify an output."  unless options.has_key?(:output)
